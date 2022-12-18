@@ -1,0 +1,35 @@
+var sqlite3 = require ('sqlite3');
+var db = new
+sqlite3.Database('BD_SCA.db');
+
+db.serialize (function(){
+  db.run('create table if not exist TB_ALUNO(ID integer not null, NOME text not null, CPF text not null, primary key("ID" autoincrement"))')
+  db.run('create table if not exist TB_PROFESSOR(ID integer not null, NOME text not null, CPF text not null, primary key("ID" autoincrement"))')
+  db.run('create table if not exist TB_DISCIPLINA(ID integer not null, NOME text not null, CPF text not null, primary key("ID" autoincrement"))')
+  db.run('create table if not exist TB_MATRICULA (ID integer not null, ALUNO_ID integer not null, DISCIPLINA_ID integer not null, PROFESSOR_ID integer not null, primary key("ID" autoincrement") foreign key ("ALUNO_ID") references "TB_ALUNO"("ID"), foreign key("DISCIPLINA_ID") references "TB_DISCIPLINA"("ID"), foreign key("PROFESSOR_ID") references "TB_PROFESSOR"("ID"))')
+  db.run('create table if not exist TB_PROFESSOR_DISCIPLINA (ID integer not null, DISCIPLINA_ID integer not null, PROFESSOR_ID integer not null, primary key("ID" autoincrement") foreign key ("DISCIPLINA_ID") references "TB_DISCIPLINA"("ID"), references ("TB_PROFESSOR"("ID"))');
+}
+  db.run('insert into TB_ALUNO(NOME, CPF)vaules ("Nicolas Carvalho","675.982.713-68"), ("Cauan Sousa", "345.691.623-95")');
+  db.run('insert into TB_PROFESSOR(nome) vaules ("Jean"),("Jean")');
+  db.run("insert into TB_DISCIPLINA(nome) vaules ("Português"),("Português")");
+  db.run('insert into TB_MATRICULA (ALUNO_ID, DISCIPLINA_ID, PROFESSOR_ID) vaules(1,1,1)');
+  db.run('insert into TB_PROFESSOR(DISCIPLINA_ID, PROFESSOR_ID) vaules (1,1),(2,2)');
+
+  db.each('select ID, NOME, CPF, from TB_ALUNO', function(err, row){
+    console.log(row.ID + ":" + row.NOME + ":" + row.CPF);
+  });
+  db.each('select ID, NOME, from TB_PROFESSOR', function(err, row){
+    console.log(row.ID + ":" + row.NOME);
+  });
+  db.each('select ID, NOME, from TB_DISCIPLINA', function(err, row){
+    console.log(row.ID + ":" + row.NOME);
+  });
+  db.each('select ID, ALUNO_ID, DISCIPLINA_ID, PROFESSOR_ID from TB_MATRICULA', function(err, row){
+    console.log(row.ID + ":" + row.ALUNO + ":" + row.DISCIPLINA + ":" + row.PROFESSOR);
+  });
+  db.each('select ID, PROFESSOR_ID, DISCIPLINA_ID from TB_PROFESSOR_DISCIPLINA', function(err, row){
+    console.log(row.ID + ":" + row.PROFESSOR + ":" + row.DSCIPLINA);
+  });
+});
+
+db.close();
